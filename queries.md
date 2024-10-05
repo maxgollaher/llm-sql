@@ -2,111 +2,142 @@
 ## Zero Shot Examples
 Question 1
 * Prompt: What is the total amount of all transactions?
-* Query: ```sql
-SELECT SUM(Amount) AS TotalAmount FROM `Transaction`;```
+* Query: 
+```mysql
+SELECT SUM(Amount) AS TotalAmount FROM `Transaction`;
+```
 
-* DB Response: ```
-[[(Decimal('3199.95'),)]]```
+* DB Response: 
+```text
+[[(Decimal('3199.95'),)]]
+```
 
 * Friendly Response: 3199.95
 
 ---
 Question 2
 * Prompt: What is the average cost of all items?
-* Query: ```sql
-SELECT AVG(Price) AS AverageCost FROM Item;```
+* Query: 
+```mysql
+SELECT AVG(Price) AS AverageCost FROM Item;
+```
 
-* DB Response: ```
-[[(Decimal('566.656667'),)]]```
+* DB Response: 
+```text
+[[(Decimal('566.656667'),)]]
+```
 
 * Friendly Response: 566.656667
 
 ---
 Question 3
 * Prompt: What is the most expensive item?
-* Query: ```sql
-SELECT Name, Price FROM Item ORDER BY Price DESC LIMIT 1;```
+* Query: 
+```mysql
+SELECT Name, Price FROM Item ORDER BY Price DESC LIMIT 1;
+```
 
-* DB Response: ```
-[[('Laptop', Decimal('999.99'))]]```
+* DB Response: 
+```text
+[[('Laptop', Decimal('999.99'))]]
+```
 
 * Friendly Response: Laptop
 
 ---
 Question 4
 * Prompt: Who is my most frequent customer?
-* Query: ```sql
-SELECT u.Username, COUNT(t.Id) AS TransactionCount
-FROM `Transaction` t
-JOIN `User` u ON t.UserId = u.Id
-GROUP BY u.Id
-ORDER BY TransactionCount DESC
-LIMIT 1;```
+* Query: 
+```mysql
+SELECT UserId, COUNT(*) AS PurchaseCount
+FROM Transaction
+GROUP BY UserId
+ORDER BY PurchaseCount DESC
+LIMIT 1;
+```
 
-* DB Response: ```
-[[('johndoe', 2)]]```
+* DB Response: 
+```text
+[[(1, 2)]]
+```
 
-* Friendly Response: johndoe
+* Friendly Response: Customer ID: 1
 
 ---
 Question 5
 * Prompt: What is the most popular item?
-* Query: ```sql
+* Query: 
+```mysql
 SELECT ItemId, COUNT(*) AS PurchaseCount
-FROM Transaction
+FROM `Transaction`
 GROUP BY ItemId
 ORDER BY PurchaseCount DESC
-LIMIT 1;```
+LIMIT 1;
+```
 
-* DB Response: ```
-[[(1, 2)]]```
+* DB Response: 
+```text
+[[(1, 2)]]
+```
 
 * Friendly Response: (1, 2)
 
 ---
 Question 6
 * Prompt: Which items are my least productive?
-* Query: ```sql
+* Query: 
+```mysql
 SELECT Item.Id, Item.Name, SUM(Transaction.Amount) AS TotalAmount
 FROM Item
 LEFT JOIN Transaction ON Item.Id = Transaction.ItemId
 GROUP BY Item.Id, Item.Name
-ORDER BY TotalAmount ASC;```
+ORDER BY TotalAmount ASC;
+```
 
-* DB Response: ```
-[[(3, 'Headphones', Decimal('199.99')), (2, 'Smartphone', Decimal('999.98')), (1, 'Laptop', Decimal('1999.98'))]]```
+* DB Response: 
+```text
+[[(3, 'Headphones', Decimal('199.99')), (2, 'Smartphone', Decimal('999.98')), (1, 'Laptop', Decimal('1999.98'))]]
+```
 
 * Friendly Response: Headphones
 
 ---
 Question 7
 * Prompt: Who is my most profitable customer?
-* Query: ```sql
+* Query: 
+```mysql
 SELECT u.Username, SUM(t.Amount) AS TotalSpent
 FROM `Transaction` t
 JOIN `User` u ON t.UserId = u.Id
 GROUP BY u.Id
 ORDER BY TotalSpent DESC
-LIMIT 1;```
+LIMIT 1;
+```
 
-* DB Response: ```
-[[('alice', Decimal('1499.98'))]]```
+* DB Response: 
+```text
+[[('alice', Decimal('1499.98'))]]
+```
 
 * Friendly Response: Alice
 
 ---
 Question 8
 * Prompt: Who is my least profitable customer?
-* Query: ```sql
+* Query: 
+```mysql
 SELECT u.Username, SUM(t.Amount) AS TotalSpent
 FROM `Transaction` t
 JOIN `User` u ON t.UserId = u.Id
 GROUP BY u.Id
 ORDER BY TotalSpent ASC
-LIMIT 1;```
+LIMIT 1;
+```
 
-* DB Response: ```
-[[('janedoe', Decimal('499.99'))]]```
+* DB Response: 
+```text
+[[('janedoe', Decimal('499.99'))]]
+```
 
 * Friendly Response: janedoe
 
@@ -114,88 +145,120 @@ LIMIT 1;```
 ## Single Domain Examples
 Question 1
 * Prompt: What is the total amount of all transactions?
-* Query: ```sql
-SELECT SUM(Amount) AS total_amount FROM Transaction;```
+* Query: 
+```mysql
+SELECT SUM(Amount) AS total_amount FROM Transaction;
+```
 
-* DB Response: ```
-[[(Decimal('3199.95'),)]]```
+* DB Response: 
+```text
+[[(Decimal('3199.95'),)]]
+```
 
 * Friendly Response: 3199.95
 
 ---
 Question 2
 * Prompt: What is the average cost of all items?
-* Query: ```sql
-SELECT AVG(Price) AS average_cost FROM Item;```
+* Query: 
+```mysql
+SELECT AVG(Price) AS average_cost FROM Item;
+```
 
-* DB Response: ```
-[[(Decimal('566.656667'),)]]```
+* DB Response: 
+```text
+[[(Decimal('566.656667'),)]]
+```
 
 * Friendly Response: 566.656667
 
 ---
 Question 3
 * Prompt: What is the most expensive item?
-* Query: ```sql
-SELECT Name, Price FROM Item ORDER BY Price DESC LIMIT 1;```
+* Query: 
+```mysql
+SELECT Name, Price FROM Item ORDER BY Price DESC LIMIT 1;
+```
 
-* DB Response: ```
-[[('Laptop', Decimal('999.99'))]]```
+* DB Response: 
+```text
+[[('Laptop', Decimal('999.99'))]]
+```
 
 * Friendly Response: Laptop
 
 ---
 Question 4
 * Prompt: Who is my most frequent customer?
-* Query: ```sql
-SELECT UserId, COUNT(*) AS frequency FROM Transaction GROUP BY UserId ORDER BY frequency DESC LIMIT 1;```
+* Query: 
+```mysql
+SELECT UserId, COUNT(*) AS purchase_count FROM Transaction GROUP BY UserId ORDER BY purchase_count DESC LIMIT 1;
+```
 
-* DB Response: ```
-[[(1, 2)]]```
+* DB Response: 
+```text
+[[(1, 2)]]
+```
 
-* Friendly Response: Customer 2
+* Friendly Response: Customer ID 1
 
 ---
 Question 5
 * Prompt: What is the most popular item?
-* Query: ```sql
-SELECT ItemId FROM Transaction GROUP BY ItemId ORDER BY COUNT(*) DESC LIMIT 1;```
+* Query: 
+```mysql
+SELECT ItemId FROM Transaction GROUP BY ItemId ORDER BY COUNT(*) DESC LIMIT 1;
+```
 
-* DB Response: ```
-[[(1,)]]```
+* DB Response: 
+```text
+[[(1,)]]
+```
 
 * Friendly Response: 1
 
 ---
 Question 6
 * Prompt: Which items are my least productive?
-* Query: ```sql
-SELECT Name FROM Item WHERE Id NOT IN (SELECT ItemId FROM Transaction);```
+* Query: 
+```mysql
+SELECT Name FROM Item WHERE Id NOT IN (SELECT DISTINCT ItemId FROM Transaction);
+```
 
-* DB Response: ```
-[[]]```
+* DB Response: 
+```text
+[[]]
+```
 
 * Friendly Response: []
 
 ---
 Question 7
 * Prompt: Who is my most profitable customer?
-* Query: ```sql
-SELECT UserId, SUM(Amount) AS total_spent FROM Transaction GROUP BY UserId ORDER BY total_spent DESC LIMIT 1;```
+* Query: 
+```mysql
+SELECT UserId, SUM(Amount) AS total_spent FROM Transaction GROUP BY UserId ORDER BY total_spent DESC LIMIT 1;
+```
 
-* DB Response: ```
-[[(3, Decimal('1499.98'))]]```
+* DB Response: 
+```text
+[[(3, Decimal('1499.98'))]]
+```
 
 * Friendly Response: Customer ID 3
 
 ---
 Question 8
 * Prompt: Who is my least profitable customer?
-* Query: ```sql
-SELECT UserId FROM (SELECT UserId, SUM(Amount) AS total FROM Transaction GROUP BY UserId ORDER BY total ASC LIMIT 1) AS t;```
+* Query: 
+```mysql
+SELECT UserId FROM Transaction GROUP BY UserId ORDER BY SUM(Amount) ASC LIMIT 1;
+```
 
-* DB Response: ```
-[[(2,)]]```
+* DB Response: 
+```text
+[[(2,)]]
+```
 
 * Friendly Response: Customer ID: 2
 

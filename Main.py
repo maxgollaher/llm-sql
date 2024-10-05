@@ -10,8 +10,8 @@ def write_queries_to_file(file, questions, openai: OpenAiUtils, db: DB, section_
         friendly_response = openai.get_friend_response(question, db_response)
         file.write(f'Question {i + 1}\n')
         file.write(f'* Prompt: {question}\n')
-        file.write(f'* Query: ```sql\n{query}```\n\n')
-        file.write(f'* DB Response: ```\n{db_response}```\n\n')
+        file.write('* Query: \n```mysql\n' + query + '\n```\n\n')
+        file.write('* DB Response: \n```text\n' + str(db_response) + '\n```\n\n')
         file.write(f'* Friendly Response: {friendly_response}\n\n')
         file.write('---\n')
 
