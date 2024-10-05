@@ -91,7 +91,7 @@ queries, allowing Chat-GPT to think more on how it should respond actually resul
 the difference in the successful query, "Which items are my least productive?" where the zero-shot query was able to
 provide a good answer, while the single-domain query was not.
 
-### Multi-Shot
+### Single-Domain Few-Shot
 
 As I stated before, for my specific task, the multi-shot approach was not as effective as the zero-shot approach.
 I think that the model was being locked into a specific way of thinking when I provided examples of queries, which
@@ -100,6 +100,7 @@ resulted in less effective queries.
 Here was the multi-shot query that I provided:
 
 Prompt: What is the most that any user has spent in my store?
+
 Query:
 ```mysql
 SELECT MAX(total) FROM (SELECT SUM(Amount) AS total FROM Transaction GROUP BY UserId) AS t;
@@ -109,4 +110,4 @@ SELECT MAX(total) FROM (SELECT SUM(Amount) AS total FROM Transaction GROUP BY Us
 
 I think that Chat-GPT 4o is a great tool for generating SQL queries when the user is not familiar with SQL. For my specific
 case, the zero-shot approach was the most effective at generating queries that I wanted, as most if not all queries
-that I provided as examples were not as effective as the zero-shot queries. 
+that I tested were successful as compared to the single-domain few-shot approach.
