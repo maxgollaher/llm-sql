@@ -3,6 +3,18 @@
 This is a simple database that mimics an online store, which stores information about users, items for sale,
 and transactions. 
 
+Tables were generated using the sql scripts found in [create-tables.sql](./create-tables.sql) and data was 
+inserted using the scripts found in [insert-data.sql](./insert-data.sql). I used [DB.py](./DB.py) to set up the database
+and run queries. [OpenAiUtils.py](./OpenAiUtils.py) was used to interact with the OpenAI API. Queries are automatically
+formatted and written to [queries.sql](./queries.sql).
+
+If you would like to run the code, you will need to set up a `config.py` file with the following variables:
+```text
+OPENAI_API_KEY = "YOUR_API_KEY"
+MYSQL_USER = "YOUR_MYSQL_USERNAME"
+MYSQL_PASSWORD = "YOUR_MYSQL_PASSWORD"
+```
+
 ## Database Schema
 
 ![Database Schema](./database-schema.png)
@@ -93,3 +105,8 @@ Query:
 SELECT MAX(total) FROM (SELECT SUM(Amount) AS total FROM Transaction GROUP BY UserId) AS t;
 ```
 
+### Conclusion
+
+I think that Chat-GPT 4o is a great tool for generating SQL queries when the user is not familiar with SQL. For my specific
+case, the zero-shot approach was the most effective at generating queries that I wanted, as most if not all queries
+that I provided as examples were not as effective as the zero-shot queries. 
