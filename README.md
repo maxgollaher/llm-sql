@@ -7,22 +7,12 @@ and transactions.
 
 ![Database Schema](./database-schema.png)
 
-## Successful Queries
+## Successful Query
 
-Prompt: What is the total amount of all transactions?
-Query:
-```mysql
-SELECT SUM(Amount) AS TotalAmount FROM `Transaction`;
-```
-DB Response:
-```text
-[[(Decimal('3199.95'),)]]
-```
-Friendly Response: 3199.95
-
----
+Prompt-Type: Zero-Shot
 
 Prompt: Which items are my least productive?
+
 Query:
 ```mysql
 SELECT Item.Id, Item.Name, SUM(Transaction.Amount) AS TotalAmount
@@ -31,36 +21,48 @@ LEFT JOIN Transaction ON Item.Id = Transaction.ItemId
 GROUP BY Item.Id, Item.Name
 ORDER BY TotalAmount ASC;
 ```
+
 DB Response:
 ```text
 [[(3, 'Headphones', Decimal('199.99')), (2, 'Smartphone', Decimal('999.98')), (1, 'Laptop', Decimal('1999.98'))]]
 ```
+
 Friendly Response: Laptop
 
 ## Unsuccessful Queries
 
+Prompt-Type: Multi-Shot
+
 Prompt: What is the most popular item?
+
 Query:
 ```mysql
 SELECT ItemId FROM Transaction GROUP BY ItemId ORDER BY COUNT(*) DESC LIMIT 1;
 ```
+
 DB Response:
 [[(1,)]]
+
 Friendly Response: 1
 
 Here, Chat-GPT was unable to infer that I wanted the name of the item, not the item ID.
 
 ---
 
+Prompt-Type: Multi-Shot
+
 Prompt: Which items are my least productive?
+
 Query:
 ```mysql
 SELECT Name FROM Item WHERE Id NOT IN (SELECT ItemId FROM Transaction);
 ```
+
 DB Response:
 ```text
 [[]]
 ```
+
 Friendly Response: No items are identified as least productive.
 
 Here, Chat-GPT thought that the least productive items were ones that had no transactions at all, which is not what I meant.
