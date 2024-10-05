@@ -47,7 +47,7 @@ class OpenAiUtils:
         Only answer the question, do not explain the answer, do not include any code, only the answer."""
 
         messages = [{"role": "user", "content": prompt}]
-        return self.get_completion(messages, 50, 0.3)
+        return self.get_completion(messages, 50, 0.6)
 
     def get_zero_shot__response(self, message):
         return self.get_response(message)

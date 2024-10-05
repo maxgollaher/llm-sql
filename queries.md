@@ -27,7 +27,7 @@ SELECT AVG(Price) AS AverageCost FROM Item;
 [[(Decimal('566.656667'),)]]
 ```
 
-* Friendly Response: 566.656667
+* Friendly Response: 566.66
 
 ---
 Question 3
@@ -49,29 +49,30 @@ Question 4
 * Prompt: Who is my most frequent customer?
 * Query: 
 ```mysql
-SELECT UserId, COUNT(*) AS PurchaseCount
-FROM Transaction
-GROUP BY UserId
-ORDER BY PurchaseCount DESC
+SELECT u.Username, COUNT(t.Id) AS TransactionCount
+FROM `Transaction` t
+JOIN `User` u ON t.UserId = u.Id
+GROUP BY u.Id
+ORDER BY TransactionCount DESC
 LIMIT 1;
 ```
 
 * DB Response: 
 ```text
-[[(1, 2)]]
+[[('johndoe', 2)]]
 ```
 
-* Friendly Response: Customer ID: 1
+* Friendly Response: johndoe
 
 ---
 Question 5
 * Prompt: What is the most popular item?
 * Query: 
 ```mysql
-SELECT ItemId, COUNT(*) AS PurchaseCount
+SELECT ItemId, COUNT(*) AS TransactionCount
 FROM `Transaction`
 GROUP BY ItemId
-ORDER BY PurchaseCount DESC
+ORDER BY TransactionCount DESC
 LIMIT 1;
 ```
 
@@ -80,7 +81,7 @@ LIMIT 1;
 [[(1, 2)]]
 ```
 
-* Friendly Response: (1, 2)
+* Friendly Response: The most popular item is item 1.
 
 ---
 Question 6
@@ -99,7 +100,7 @@ ORDER BY TotalAmount ASC;
 [[(3, 'Headphones', Decimal('199.99')), (2, 'Smartphone', Decimal('999.98')), (1, 'Laptop', Decimal('1999.98'))]]
 ```
 
-* Friendly Response: Headphones
+* Friendly Response: Laptop
 
 ---
 Question 7
@@ -192,7 +193,7 @@ Question 4
 * Prompt: Who is my most frequent customer?
 * Query: 
 ```mysql
-SELECT UserId, COUNT(*) AS purchase_count FROM Transaction GROUP BY UserId ORDER BY purchase_count DESC LIMIT 1;
+SELECT UserId, COUNT(*) AS frequency FROM Transaction GROUP BY UserId ORDER BY frequency DESC LIMIT 1;
 ```
 
 * DB Response: 
@@ -222,7 +223,7 @@ Question 6
 * Prompt: Which items are my least productive?
 * Query: 
 ```mysql
-SELECT Name FROM Item WHERE Id NOT IN (SELECT DISTINCT ItemId FROM Transaction);
+SELECT Name FROM Item WHERE Id NOT IN (SELECT ItemId FROM Transaction);
 ```
 
 * DB Response: 
@@ -230,7 +231,7 @@ SELECT Name FROM Item WHERE Id NOT IN (SELECT DISTINCT ItemId FROM Transaction);
 [[]]
 ```
 
-* Friendly Response: []
+* Friendly Response: No items are identified as least productive.
 
 ---
 Question 7
@@ -245,14 +246,14 @@ SELECT UserId, SUM(Amount) AS total_spent FROM Transaction GROUP BY UserId ORDER
 [[(3, Decimal('1499.98'))]]
 ```
 
-* Friendly Response: Customer ID 3
+* Friendly Response: Customer ID 3.
 
 ---
 Question 8
 * Prompt: Who is my least profitable customer?
 * Query: 
 ```mysql
-SELECT UserId FROM Transaction GROUP BY UserId ORDER BY SUM(Amount) ASC LIMIT 1;
+SELECT UserId FROM (SELECT UserId, SUM(Amount) AS total FROM Transaction GROUP BY UserId) AS t ORDER BY total ASC LIMIT 1;
 ```
 
 * DB Response: 
@@ -260,6 +261,6 @@ SELECT UserId FROM Transaction GROUP BY UserId ORDER BY SUM(Amount) ASC LIMIT 1;
 [[(2,)]]
 ```
 
-* Friendly Response: Customer ID: 2
+* Friendly Response: Customer ID 2
 
 ---
